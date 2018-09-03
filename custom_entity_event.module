@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Contains custom_entity_event.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\custom_entity_event\Event\EntityEvent;
+
+
+/**
+ * Implements hook_help().
+ */
+function custom_entity_event_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the custom_entity_event module.
+    case 'help.page.custom_entity_event':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Custom entity event crud') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+function custom_entity_event_entity_insert(Drupal\Core\Entity\EntityInterface $entity){
+  $event_type = EntityEvent::INSERT;
+  $event = new EntityEvent($event_type, $entity);
+  \Drupal::service('event_dispatcher')->dispatch($event_type,$event);
+}
+
+function custom_entity_event_entity_update(Drupal\Core\Entity\EntityInterface $entity){
+  $event_type = EntityEvent::UPDATE;
+  $event = new EntityEvent($event_type, $entity);
+  \Drupal::service('event_dispatcher')->dispatch($event_type,$event);
+}
+
+
+function custom_entity_event_entity_delete(Drupal\Core\Entity\EntityInterface $entity){
+  $event_type = EntityEvent::DELETE;
+  $event = new EntityEvent($event_type, $entity);
+  \Drupal::service('event_dispatcher')->dispatch($event_type,$event);
+}
